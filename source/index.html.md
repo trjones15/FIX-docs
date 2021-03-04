@@ -51,16 +51,16 @@ All trade messages must have tag 35=8 indicating that each message is an executi
 
 ## Allocation Trade
 
-This trade type is used to facilitate average-price workflows, i.e. averaging many
-trades for a customer and allocating it to them as a single trade.
-
 ```
-// Example Allocation Trade
 8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914352=20201021-21:42:34
 20=09001=A1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
 421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
 60=20201021-13:42:34.12347=A76=ABCD79=10001710=180
 ```
+
+This trade type is used to facilitate average-price workflows, i.e. averaging many
+trades for a customer and allocating it to them as a single trade.
+
 ```
 BeginString 8=FIX.4.2
 BodyLength9=253
@@ -87,54 +87,340 @@ TradeExecutionTime60=20201021-13:42:34.123
 Capacity 47=A
 CheckSum 10=180
 ```
+
 | Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
 | - | - | - | - | - | - | - |
-| ExecutionTransactionType | `20` | `0` `1` | `Integer` | `1` | `R` | `0-New` `1-Cancel` |
-| TradeType | `9001` | `A` | `String` | `1` | `R` | `A-Allocation` |
-| AccountID | `1` |  | `Integer` | `6` | `R` | Clear Street provided account id |
-| BehalfOfAccountID | `109` |  | `Integer` | `6` | `O` | Clear Street provided account ID if this trade is on behalf of another account |
-| BranchOffice | `9003` |  | `String` |  | `O` | Branch office for this trade |
-| TradeID | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
-| CancelTradeID | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
-| TradeDate | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
-| InstrumentIdentifierType | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
-| InstrumentIdentifier | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
-| InstrumentCountry | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
-| InstrumentCurrency | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
-| Price | `31` |  | `Decimal` |  | `R` | The price of the trade |
-| Quantity | `32` |  | `Decimal` |  | `R` | The quantity of the trade (supports fractional quantities) |
-| RegisteredRep | `9002` |  | `String` |  | `O` | Registered rep on this trade |
-| Side | `54` | `1` `2` `5` `6` | `Integer` | `1` | `R` | `1-Buy` `2-Sell` `5-Sell Short` `6-Sell Exempt` |
-| PositionType | `77` | `C` `O` | `String` | `1` | `O` | `C-Close ` `O-Open` |
-| SettlementCurrency | `120` |  | `String` | `3` | `O` | ISO 4217 alpha-3 currency code in which the instrument trades |
-| SettlementDateType | `63` | `0` `7` | `Integer` | `1` | `R` | `0-Regular` `7-When_Issued` |
-| SettlementDate | `64` |  | `Integer` | `8` | `CR` | Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in `YYYYMMDD` format |
-| Solicited | `325` | `F` `T` | `String` | `1` | `O` | `F-Solicited` `T-Not Solicited` |
-| TradeExecutionTime | `60` |  | `UTCTimestamp` |  | `R` | Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss |
-| Capacity | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
-| ContraSideQualifier | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
-| Commission | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
-| OmitSECFee | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
-| OmitTAFFee | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
-| OrderID | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
+| `ExecutionTransactionType` | `20` | `0` `1` | `Integer` | `1` | `R` | `0-New` `1-Cancel` |
+| `TradeType` | `9001` | `A` | `String` | `1` | `R` | `A-Allocation` |
+| `AccountID` | `1` |  | `Integer` | `6` | `R` | Clear Street provided account id |
+| `BehalfOfAccountID` | `109` |  | `Integer` | `6` | `O` | Clear Street provided account ID if this trade is on behalf of another account |
+| `BranchOffice` | `9003` |  | `String` |  | `O` | Branch office for this trade |
+| `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
+| `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
+| `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
+| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
+| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
+| `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
+| `Quantity` | `32` |  | `Decimal` |  | `R` | The quantity of the trade (supports fractional quantities) |
+| `RegisteredRep` | `9002` |  | `String` |  | `O` | Registered rep on this trade |
+| `Side` | `54` | `1` `2` `5` `6` | `Integer` | `1` | `R` | `1-Buy` `2-Sell` `5-Sell Short` `6-Sell Exempt` |
+| `PositionType` | `77` | `C` `O` | `String` | `1` | `O` | `C-Close ` `O-Open` |
+| `SettlementCurrency` | `120` |  | `String` | `3` | `O` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `SettlementDateType` | `63` | `0` `7` | `Integer` | `1` | `R` | `0-Regular` `7-When_Issued` |
+| `SettlementDate` | `64` |  | `Integer` | `8` | `CR` | Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in `YYYYMMDD` format |
+| `Solicited` | `325` | `F` `T` | `String` | `1` | `O` | `F-Solicited` `T-Not Solicited` |
+| `TradeExecutionTime` | `60` |  | `UTCTimestamp` |  | `R` | Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss |
+| `Capacity` | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
+| `ContraSideQualifier` | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
+| `Commission` | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
+| `OmitSECFee` | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
+| `OmitTAFFee` | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
+| `OrderID` | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
 
 
 ## Away Trade
 
-This trade type represents a customer executing away from Clear Street LLC. For example, direct customer of CLST routes order for execution to Goldman.
+```
+8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914552=20201021-21:42:3420=09001=W1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
+```
+
+This trade type represents a customer executing away from Clear Street LLC. For example, direct customer of CLST routes
+order for execution to Goldman.
+
+
+```
+BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=W
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlmenetDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=M
+ContraClearingNum 440=0295
+ContraMPID375=ABCD
+ExecutingMPID 76=WXYZ
+Checksum10=180
+```
+
+| Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
+| - | - | - | - | - | - | - | 
+| `ExecutionTransactionType` | `20` | `0` `1` | `Integer` | `1` | `R` | `0-New` `1-Cancel` |
+| `TradeType` | `9001` | `W` | `String` | `1` | `R` | `W-Away` |
+| `AccountID` | `1` |  | `Integer` | `6` | `R` | Clear Street provided account id |
+| `BehalfOfAccountID` | `109` |  | `Integer` | `6` | `O` | Clear Street provided account ID if this trade is on behalf of another account | 
+| `BranchOffice` | `9003` |  | `String` |  | `O` | Branch office for this trade |
+| `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
+| `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
+| `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
+| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
+| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
+| `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
+| `Quantity` | `32` |  | `Decimal` |  | `R` | The quantity of the trade (supports fractional quantities) |
+| `RegisteredRep` | `9002` |  | `String` |  | `O` | Registered rep on this trade |
+| `Side` | `54` | `1` `2` `5` `6` | `Integer` | `1` | `R` | `1-Buy` `2-Sell` `5-Sell Short` `6-Sell Exempt` |
+| `PositionType` | `77` | `C` `O` | `String` | `1` | `O` | `C-Close` `O-Open` |
+| `SettlementCurrency` | `120` |  | `String` | `3` | `O` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `SettlementDateType` | `63` | `0` `7` | `Integer` | `1` | `R` | `0-Regular` `7-When_Issued` |
+| `SettlementDate` | `64` |  | `Integer` | `8` | `CR` | Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in `YYYYMMDD` format |
+| `Solicited` | `325` | `F` `T` | `String` | `1` | `O` | `F-Solicited` `T-Not Solicited` |
+| `TradeExecutionTime` | `60` |  | `UTCTimestamp` |  | `R` | Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss |
+| `Capacity` | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
+| `ContraClearingNumber` | `440` |  | `Integer` | `4` | `O` | Contra-party's clearing number, If not supplied the value will be derived from an internal MPID to clearing number mapping |
+| `ContraMPID` | `375` |  | `String` | `4` | `R` | Contra-party's MPID |
+| `ExecutingMPID` | `76` |  | `String` | `4` | `R` | Executing party's MPID |
+| `ContraSideQualifier` | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
+| `MIC` | `30` |  | `String` | `4` | `O` | ISO 10383 Market Identifer Code for the exchange |
+| `Commission` | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
+| `OmitSECFee` | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
+| `OmitTAFFee` | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
+| `LocateID` | `9007` |  | `String` |  | `CR` | Locate ID obtained for a short sale; Required for Sell Short |
+| `LocateSource` | `9008` |  | `String` |  | `CR` | Firm supplying the locate (usually MPID); Required for Sell Short |
+| `OrderID` | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
+| `NSCCClearing` | `9010` | `agu` `contra` `corr` `corr_fees` `qsr` | `String` |  | `O` | `agu` `contra` `corr` `corr_fees` `qsr` |
+
 
 
 ## Bilateral Trade
 
-This trade represents a trade between two trading entities. For example, trading firm XYZ buys 100 share of AAPL from trading firm ABC.
+```
+8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914152=20201021-21:42:3420=09001=B1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
+```
+
+
+This trade represents a trade between two trading entities. For example, trading firm XYZ buys 100 share of AAPL from
+trading firm ABC.
+
+```
+BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=B
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlmenetDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=M
+ContraClearingNum 440=0295
+ContraMPID375=ABCD
+ExecutingMPID 76=WXYZ
+Checksum10=180
+```
+
+| Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
+| - | - | - | - | - | - | - |
+| `ExecutionTransactionType` | `20` | `0` `1` | `Integer` | `1` | `R` | `0-New` `1-Cancel` |
+| `TradeType` | `9001` | `B` | `String` | `1` | `R` | `B-Bilateral` |
+| `AccountID` | `1` |  | `Integer` | `6` | `R` | Clear Street provided account id |
+| `BehalfOfAccountID` | `109` |  | `Integer` | `6` | `O` | Clear Street provided account ID if this trade is on behalf of another account |
+| `BranchOffice` | `9003` |  | `String` |  | `O` | Branch office for this trade |
+| `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
+| `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
+| `Trade Date` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
+| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
+| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
+| `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
+| `Quantity` | `32` |  | `Decimal` |  | `R` | The quantity of the trade (supports fractional quantities) |
+| `RegisteredRep` | `9002` |  | `String` |  | `O` | Registered rep on this trade |
+| `Side` | `54` | `1` `2` `5` `6` | `Integer` | `1` | `R` | `1-Buy` `2-Sell` `5-Sell Short` `6-Sell Exempt` |
+| `PositionType` | `77` | `C` `O` | `String` | `1` | `O` | `C-Close ` `O-Open` |
+| `SettlementCurrency` | `120` |  | `String` | `3` | `O` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `SettlementDateType` | `63` | `0` `7` | `Integer` | `1` | `R` | `0-Regular` `7-When_Issued` |
+| `SettlementDate` | `64` |  | `Integer` | `8` | `CR` | Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in `YYYYMMDD` format |
+| `Solicited` | `325` | `F` `T` | `String` | `1` | `O` | `F-Solicited` `T-Not Solicited` |
+| `TradeExecutionTime` | `60` |  | `UTCTimestamp` |  | `R` | Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss |
+| `Capacity` | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
+| `ContraClearing Number` | `440` |  | `Integer` | `4` | `O` | Contra-party's clearing number, If not supplied the value will be derived from an internal MPID to clearing number mapping |
+| `ContraMPID` | `375` |  | `String` | `4` | `R` | Contra-party's MPID |
+| `ExecutingMPID` | `76` |  | `String` | `4` | `R` |Executing party's MPID |
+| `ContraSideQualifier` | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
+| `MIC` | `30` |  | `String` | `4` | `O` | ISO 10383 Market Identifer Code for the exchange |
+| `Commission` | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
+| `OmitSECFee` | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
+| `OmitTAFFee` | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
+| `LocateID` | `9007` |  | `String` |  | `CR` | Locate ID obtained for a short sale; Required for Sell Short |
+| `LocateSource` | `9008` |  | `String` |  | `CR` | Firm supplying the locate (usually MPID); Required for Sell Short |
+| `OrderID` | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
+| `NSCC Clearing` | `9010` | `agu` `contra` `corr` `corr_fees` `qsr` | `String` | `O` | `agu` `contra` `corr` `corr_fees` `qsr` |
+
 
 ## Exchange Trade
 
-This trade represents a trade between a trading entity and an exchange. For example, trading firm XYX buys 100 shares of AAPL directly on Nasdaq
+```
+8=FIX.4.29=25135=849=OMS_CLIENT56=0000913234=12914452=20201021-21:42:3420=09001=E1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=R76=ABCD30=NYSE10=180
+```
 
-## Exchange Trade
 
-This trade represents a trade between a trading entity and an exchange. For example, trading firm XYX buys 100 shares of AAPL directly on Nasdaq
+This trade represents a trade between a trading entity and an exchange. For example, trading firm XYX buys 100 shares of
+AAPL directly on Nasdaq
+
+```
+BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=E
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlementDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=R
+ExecutingMPID 76=WXYZ
+MIC 30=NYSE
+Checksum10=180
+```
+
+| Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
+| - | - | - | - | - | - | - |
+| `ExecutionTransactionType` | `20` | `0` `1` | `Integer` | `1` | `R` | `0-New` `1-Cancel` |
+| `TradeType` | `9001` | `E` | `String` | `1` | `R` | `E-Exchange` |
+| `AccountID` | `1` |  | `Integer` | `6` | `R` | Clear Street provided account id |
+| `BehalfOfAccountID` | `109` |  | `Integer` | `6` | `O` | Clear Street provided account ID if this trade is on behalf of another account |
+| `BranchOffice` | `9003` |  | `String` |  | `O` | Branch office for this trade |
+| `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
+| `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
+| `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
+| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
+| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
+| `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
+| `Quantity` | `32` |  | `Decimal` |  | `R` | The quantity of the trade (supports fractional quantities) |
+| `RegisteredRep` | `9002` |  | `String` |  | `O` | Registered rep on this trade |
+| `Side` | `54` | `1` `2` `5` `6` | `Integer` | `1` | `R` | `1-Buy` `2-Sell` `5-Sell Short` `6-Sell Exempt` |
+| `PositionType` | `77` | `C` `O` | `String` | `1` | `O` | `C-Close` `O-Open` |
+| `SettlementCurrency` | `120` |  | `String` | `3` | `O` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `SettlementDateType` | `63` | `0` `7` | `Integer` | `1` | `R` | `0-Regular` `7-When_Issued` |
+| `SettlementDate` | `64` |  | `Integer` | `8` | `CR` | Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in `YYYYMMDD` format |
+| `Solicited` | `325` | `F` `T` | `String` | `1` | `O` | `F-Solicited` `T-Not Solicited` |
+| `TradeExecutionTime` | `60` |  | `UTCTimestamp` |  | `R` | Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss |
+| `Capacity` | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
+| `ExecutingMPID` | `76` |  | `String` | `4` | `R` | Executing party's MPID |
+| `ContraSideQualifier` | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
+| `MIC` | `30` |  | `String` | `4` | `R` | ISO 10383 Market Identifer Code for the exchange |
+| `Commission` | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
+| `OmitSECFee` | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
+| `OmitTAFFee` | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
+| `LocateID` | `9007` |  | `String` |  | `CR` | Locate ID obtained for a short sale; Required for Sell Short |
+| `LocateSource` | `9008` |  | `String` |  | `CR` | Firm supplying the locate (usually MPID); Required for Sell Short |
+| `OrderID` | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
+
+## Transfer Trade
+
+```
+8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914252=20201021-21:42:3420=09001=T1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=P76=ABCD79=10001710=180
+```
+
+79=10001710=180
+
+```
+BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=T
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlmenetDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=P
+ExecutingMPID 76=WXYZ
+Checksum10=180
+```
+
+This trade type is to facilitate trade movement between Clear Street internal accounts. For example, trade movement from a proprietary account to an average price account.
+
+| Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
+| - | - | - | - | - | - | - |
+| `ExecutionTransactionType` | `20` | `0` `1` | `Integer` | `1` | `R` | `0-New` `1-Cancel` |
+| `TradeType` | `9001` | `T` | `String` | `1` | `R` | `T-Transfer` |
+| `AccountID` | `1` |  | `Integer` | `6` | `R` | Clear Street provided account id |
+| `BehalfOfAccountID` | `109` |  | `Integer` | `6` | `O` | Clear Street provided account ID if this trade is on behalf of another account |
+| `BranchOffice` | `9003` |  | `String` |  | `O` | Branch office for this trade |
+| `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
+| `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
+| `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
+| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
+| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
+| `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
+| `Quantity` | `32` |  | `Decimal` |  | `R` | The quantity of the trade (supports fractional quantities) |
+| `RegisteredRep` | `9002` |  | `String` |  | `O` | Registered rep on this trade |
+| `Side` | `54` | `1` `2` `5` `6` | `Integer` | `1` | `R` | `1-Buy` `2-Sell` `5-Sell Short` `6-Sell Exempt` |
+| `PositionType` | `77` | `C` `O` | `String` | `1` | `O` | `C-Close` `O-Open` |
+| `SettlementCurrency` | `120` |  | `String` | `3` | `O` | ISO 4217 alpha-3 currency code in which the instrument trades |
+| `SettlementDateType` | `63` | `0` `7` | `Integer` | `1` | `R` | `0-Regular` `7-When_Issued` |
+| `SettlementDate` | `64` |  | `Integer` | `8` | `CR` | Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in `YYYYMMDD` format |
+| `Solicited` | `325` | `F` `T` | `String` | `1` | `O` | `F-Solicited` `T-Not Solicited` |
+| `TradeExecutionTime` | `60` |  | `UTCTimestamp` |  | `R` | Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss |
+| `Capacity` | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
+| `ContraSideQualifier` | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
+| `Commission` | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
+| `OmitSECFee` | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
+| `OmitTAFFee` | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
+
 
 # FIX Outbound (Response) Specification
 
