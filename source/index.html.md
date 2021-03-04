@@ -87,6 +87,7 @@ SettlementDateType 63=0
 SettlementDate 64=20201023
 TradeExecutionTime60=20201021-13:42:34.123
 Capacity 47=A
+TargetAccountID 79=100017
 CheckSum 10=180
 ```
 
@@ -117,6 +118,7 @@ CheckSum 10=180
 | `Capacity` | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
 | `ContraSideQualifier` | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
 | `Commission` | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
+| `TargetAccountID` | `79` |  | `Integer` |  | `R` | Clear Street provided account ID  |
 | `OmitSECFee` | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
 | `OmitTAFFee` | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
 | `OrderID` | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
@@ -388,6 +390,7 @@ SettlmenetDate64=20201023
 TradeExecutionTime60=20201021-13:42:34.123
 Capacity47=P
 ExecutingMPID 76=WXYZ
+TargetAccountID 79=100017
 Checksum10=180
 ```
 
@@ -420,6 +423,7 @@ This trade type is to facilitate trade movement between Clear Street internal ac
 | `Capacity` | `47` | `A` `M` `P` `R` | `String` | `1` | `R` | `A-Agency` `M-Mixed` `P-Principal` `R-Riskless Principal` |
 | `ContraSideQualifier` | `9004` | `5` `6` | `Integer` |  | `CR` | `5-Sell Short` `6-Sell Exempt` |
 | `Commission` | `12` |  | `Decimal` |  | `O` | Commission charged or paid |
+| `TargetAccountID` | `79` |  | `Integer` |  | `R` | Clear Street provided account ID  |
 | `OmitSECFee` | `9005` | `F` `T` | `String` | `1` | `O` | True if SEC fees should not be applied |
 | `OmitTAFFee` | `9006` | `F` `T` | `String` | `1` | `O` | True if TAF fees should not be applied |
 
