@@ -51,6 +51,10 @@ All trade messages must have tag 35=8 indicating that each message is an executi
 
 ## Allocation Trade
 
+
+This trade type is used to facilitate average-price workflows, i.e. averaging many
+trades for a customer and allocating it to them as a single trade.
+
 ```
 8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914352=20201021-21:42:34
 20=09001=A1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
@@ -58,8 +62,6 @@ All trade messages must have tag 35=8 indicating that each message is an executi
 60=20201021-13:42:34.12347=A76=ABCD79=10001710=180
 ```
 
-This trade type is used to facilitate average-price workflows, i.e. averaging many
-trades for a customer and allocating it to them as a single trade.
 
 ```
 BeginString 8=FIX.4.2
