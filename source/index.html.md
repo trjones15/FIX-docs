@@ -52,14 +52,11 @@ All trade messages must have tag 35=8 indicating that each message is an executi
 ## Allocation Trade
 
 
-This trade type is used to facilitate average-price workflows, i.e. averaging many
-trades for a customer and allocating it to them as a single trade.
-
 ```
 8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914352=20201021-21:42:34
-20=09001=A1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
-421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
-60=20201021-13:42:34.12347=A76=ABCD79=10001710=180
+20=09001=A1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=A76=ABCD79=10001710=180
 ```
 
 
@@ -90,6 +87,9 @@ Capacity 47=A
 TargetAccountID 79=100017
 CheckSum 10=180
 ```
+
+This trade type is used to facilitate average-price workflows, i.e. averaging many
+trades for a customer and allocating it to them as a single trade.
 
 | Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
 | - | - | - | - | - | - | - |
@@ -127,12 +127,11 @@ CheckSum 10=180
 ## Away Trade
 
 ```
-8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914552=20201021-21:42:3420=09001=W1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
+8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914552=20201021-21:42:34
+20=09001=W1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
 ```
-
-This trade type represents a customer executing away from Clear Street LLC. For example, direct customer of CLST routes
-order for execution to Goldman.
-
 
 ```
 BeginString 8=FIX.4.2
@@ -163,6 +162,8 @@ ContraMPID375=ABCD
 ExecutingMPID 76=WXYZ
 Checksum10=180
 ```
+This trade type represents a customer executing away from Clear Street LLC. For example, direct customer of CLST routes
+order for execution to Goldman.
 
 | Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
 | - | - | - | - | - | - | - | 
@@ -207,12 +208,11 @@ Checksum10=180
 ## Bilateral Trade
 
 ```
-8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914152=20201021-21:42:3420=09001=B1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
+8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914152=20201021-21:42:34
+20=09001=B1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
 ```
-
-
-This trade represents a trade between two trading entities. For example, trading firm XYZ buys 100 share of AAPL from
-trading firm ABC.
 
 ```
 BeginString 8=FIX.4.2
@@ -243,6 +243,9 @@ ContraMPID375=ABCD
 ExecutingMPID 76=WXYZ
 Checksum10=180
 ```
+
+This trade represents a trade between two trading entities. For example, trading firm XYZ buys 100 share of AAPL from
+trading firm ABC.
 
 | Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
 | - | - | - | - | - | - | - |
@@ -286,12 +289,11 @@ Checksum10=180
 ## Exchange Trade
 
 ```
-8=FIX.4.29=25135=849=OMS_CLIENT56=0000913234=12914452=20201021-21:42:3420=09001=E1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=R76=ABCD30=NYSE10=180
+8=FIX.4.29=25135=849=OMS_CLIENT56=0000913234=12914452=20201021-21:42:34
+20=09001=E1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=R76=ABCD30=NYSE10=180
 ```
-
-
-This trade represents a trade between a trading entity and an exchange. For example, trading firm XYX buys 100 shares of
-AAPL directly on Nasdaq
 
 ```
 BeginString 8=FIX.4.2
@@ -321,6 +323,9 @@ ExecutingMPID 76=WXYZ
 MIC 30=NYSE
 Checksum10=180
 ```
+
+This trade represents a trade between a trading entity and an exchange. For example, trading firm XYX buys 100 shares of
+AAPL directly on Nasdaq
 
 | Name | FIX Tag | Allowable Values | Type | Length | Required? | Description |
 | - | - | - | - | - | - | - |
@@ -360,10 +365,11 @@ Checksum10=180
 ## Transfer Trade
 
 ```
-8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914252=20201021-21:42:3420=09001=T1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038421=USA15=USD31=000213.48000032=0000000298754=263=064=2020102360=20201021-13:42:34.12347=P76=ABCD79=10001710=180
+8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914252=20201021-21:42:34
+20=09001=T1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=P76=ABCD79=10001710=180
 ```
-
-79=10001710=180
 
 ```
 BeginString 8=FIX.4.2
