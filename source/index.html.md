@@ -2,9 +2,6 @@
 title: FIX Trade Specification
 
 
-toc_footers:
-  - Hello World
-
 search: true
 ---
 
