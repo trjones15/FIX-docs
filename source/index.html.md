@@ -2,6 +2,9 @@
 title: FIX Trade Specification
 
 
+toc_footers:
+  - [Powered By Slate](https://github.com/slatedocs/slate)
+
 search: true
 ---
 
