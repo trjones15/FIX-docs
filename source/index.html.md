@@ -3,7 +3,7 @@ title: FIX Trade Specification
 
 
 toc_footers:
-  - Hello World
+  - [Powered By Slate](https://github.com/slatedocs/slate)
 
 search: true
 ---
