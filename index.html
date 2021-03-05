@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>FIX Trade Specification</title>
 
     <style media="screen">
       .highlight table td { padding: 5px; }
@@ -282,16 +282,13 @@
   color: #859900;
 }
     </style>
-    <link href="stylesheets/screen-c9d8fa83.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/screen-75f6955d.css" rel="stylesheet" media="screen" />
     <link href="stylesheets/print-953e3353.css" rel="stylesheet" media="print" />
       <script src="javascripts/all-a9fde460.js"></script>
 
-    <script>
-      $(function() { setupCodeCopy(); });
-    </script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -299,13 +296,7 @@
       </span>
     </a>
     <div class="toc-wrapper">
-      <img src="images/logo-1e815a84.png" class="logo" alt="" />
-        <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
-        </div>
+      <img src="images/logo-dbc3187b.png" class="logo" alt="" />
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
@@ -315,280 +306,1764 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
+            <a href="#configuring-fix-session" class="toc-h1 toc-link" data-title="Configuring FIX Session">Configuring FIX Session</a>
           </li>
           <li>
-            <a href="#kittens" class="toc-h1 toc-link" data-title="Kittens">Kittens</a>
+            <a href="#fix-inbound-trade-specification" class="toc-h1 toc-link" data-title="FIX Inbound Trade Specification">FIX Inbound Trade Specification</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-all-kittens" class="toc-h2 toc-link" data-title="Get All Kittens">Get All Kittens</a>
+                    <a href="#allocation-trade" class="toc-h2 toc-link" data-title="Allocation Trade">Allocation Trade</a>
                   </li>
                   <li>
-                    <a href="#get-a-specific-kitten" class="toc-h2 toc-link" data-title="Get a Specific Kitten">Get a Specific Kitten</a>
+                    <a href="#away-trade" class="toc-h2 toc-link" data-title="Away Trade">Away Trade</a>
                   </li>
                   <li>
-                    <a href="#delete-a-specific-kitten" class="toc-h2 toc-link" data-title="Delete a Specific Kitten">Delete a Specific Kitten</a>
+                    <a href="#bilateral-trade" class="toc-h2 toc-link" data-title="Bilateral Trade">Bilateral Trade</a>
+                  </li>
+                  <li>
+                    <a href="#exchange-trade" class="toc-h2 toc-link" data-title="Exchange Trade">Exchange Trade</a>
+                  </li>
+                  <li>
+                    <a href="#transfer-trade" class="toc-h2 toc-link" data-title="Transfer Trade">Transfer Trade</a>
                   </li>
               </ul>
           </li>
           <li>
-            <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
+            <a href="#fix-outbound-response-specification" class="toc-h1 toc-link" data-title="FIX Outbound (Response) Specification">FIX Outbound (Response) Specification</a>
           </li>
       </ul>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a></li>
+            <li>Hello World</li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>FIX trade specification details the tags and values along with description of values for each trade field for processing incoming trades from OMS clients. Clear Street currently utilizes FIX 4.2 format.</p>
+<h1 id='configuring-fix-session'>Configuring FIX Session</h1><div class="highlight"><pre class="highlight plaintext"><code>// Example Config
+[DEFAULT]
+ReconnectInterval=5
+SenderCompID=TEST
+FileLogPath=/tmp
+HeartBtInt=30
+SocketAcceptPort=31234
+TargetCompID=CLST
+HeartBtInt=30
+SocketConnectPort=31234
+SocketConnectHost=100.0.0.0
+SessionQualifier=1
+BeginString=FIX.4.2
 
-<p>We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/slatedocs/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
+[SESSION]
+StartTime=10:00:00
+EndTime=02:00:00
+SQLStoreDriver=postgres
 </code></pre></div>
-<blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<p>A FIX session is defined as a unique combination of a <code>BeginString</code> (the FIX version number 4.2), a
+<code>SenderCompID</code> (OMS Client ID as defined by Clear Street), and a <code>TargetCompID</code> (Clear Street&#39;s ID CLST). A <code>SessionQualifier</code> can also be used to disambiguate otherwise identical sessions.</p>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<p>A FIX session has an active time period during which all data is transmitted. Clear Street currently accepts connections between 5 AM EST to 9 PM EST on all business days.</p>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<p>A Logon message (Tag 35=A) must be sent to Clear Street on every business day to indicate the beginning of activity and a Logout message (Tag 35=5)must be sent to Clear Street indicating end of activity for that day.</p>
 
-<p><code>Authorization: meowmeowmeow</code></p>
+<p>Clear Street also recommends exchanging heartbeats every 30 seconds by sending a message with tag 35=0.</p>
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>Clear Street expects every message sent to have a unique continuous sequence number as part of message with tag 34=. If there are any gaps in sequence numbers, a sequence reset message will sent to OMS client with tag 34=4.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="n">kittens</span><span class="p">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="kd">get</span><span class="p">();</span>
+<p>All trade messages must have tag 35=8 indicating that each message is an execution report. Please note that we have added few custom tags starting with 9001 to allow clients to send specific information needed for trades to be processed at our end. These tags are listed as part of the inbound specification.</p>
+<h1 id='fix-inbound-trade-specification'>FIX Inbound Trade Specification</h1><h2 id='allocation-trade'>Allocation Trade</h2><div class="highlight"><pre class="highlight plaintext"><code>8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914352=20201021-21:42:34
+20=09001=A1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=A76=ABCD79=10001710=180
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>BeginString 8=FIX.4.2
+BodyLength9=253
+MsgType 35=8
+SenderCompID49=TEST
+TargetCompID 56=CLST
+MsgSeqNum 34=129143
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType 9001=A
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType 22=4
+InstrumentIdentifier48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType 63=0
+SettlementDate 64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity 47=A
+TargetAccountID 79=100017
+CheckSum 10=180
 </code></pre></div>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre></div>
-<p>This endpoint retrieves all kittens.</p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<p>This trade type is used to facilitate average-price workflows, i.e. averaging many
+trades for a customer and allocating it to them as a single trade.</p>
+
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
+<th>Name</th>
+<th>FIX Tag</th>
+<th>Allowable Values</th>
+<th>Type</th>
+<th>Length</th>
+<th>Required?</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td><code>ExecutionTransactionType</code></td>
+<td><code>20</code></td>
+<td><code>0</code> <code>1</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-New</code> <code>1-Cancel</code></td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td><code>TradeType</code></td>
+<td><code>9001</code></td>
+<td><code>A</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>A-Allocation</code></td>
+</tr>
+<tr>
+<td><code>AccountID</code></td>
+<td><code>1</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>R</code></td>
+<td>Clear Street provided account id</td>
+</tr>
+<tr>
+<td><code>BehalfOfAccountID</code></td>
+<td><code>109</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>O</code></td>
+<td>Clear Street provided account ID if this trade is on behalf of another account</td>
+</tr>
+<tr>
+<td><code>BranchOffice</code></td>
+<td><code>9003</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Branch office for this trade</td>
+</tr>
+<tr>
+<td><code>TradeID</code></td>
+<td><code>17</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Unique Trade ID for this trade. Must be unique across days</td>
+</tr>
+<tr>
+<td><code>CancelTradeID</code></td>
+<td><code>9009</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Original trade ID to cancel; Required for all Cancel trades</td>
+</tr>
+<tr>
+<td><code>TradeDate</code></td>
+<td><code>75</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>R</code></td>
+<td>Trade Date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifierType</code></td>
+<td><code>22</code></td>
+<td><code>1</code> <code>2</code> <code>4</code> <code>8</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-CUSIP 2-SEDOL 4-ISIN 8-TICKER</code></td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifier</code></td>
+<td><code>48</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Instrument Identifier based on tag 22</td>
+</tr>
+<tr>
+<td><code>InstrumentCountry</code></td>
+<td><code>421</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 3166 alpha-3 country code where the instrument trades</td>
+</tr>
+<tr>
+<td><code>InstrumentCurrency</code></td>
+<td><code>15</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>Price</code></td>
+<td><code>31</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The price of the trade</td>
+</tr>
+<tr>
+<td><code>Quantity</code></td>
+<td><code>32</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The quantity of the trade (supports fractional quantities)</td>
+</tr>
+<tr>
+<td><code>RegisteredRep</code></td>
+<td><code>9002</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Registered rep on this trade</td>
+</tr>
+<tr>
+<td><code>Side</code></td>
+<td><code>54</code></td>
+<td><code>1</code> <code>2</code> <code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-Buy</code> <code>2-Sell</code> <code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>PositionType</code></td>
+<td><code>77</code></td>
+<td><code>C</code> <code>O</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>C-Close</code> <code>O-Open</code></td>
+</tr>
+<tr>
+<td><code>SettlementCurrency</code></td>
+<td><code>120</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>O</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>SettlementDateType</code></td>
+<td><code>63</code></td>
+<td><code>0</code> <code>7</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-Regular</code> <code>7-When_Issued</code></td>
+</tr>
+<tr>
+<td><code>SettlementDate</code></td>
+<td><code>64</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>CR</code></td>
+<td>Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>Solicited</code></td>
+<td><code>325</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>F-Solicited</code> <code>T-Not Solicited</code></td>
+</tr>
+<tr>
+<td><code>TradeExecutionTime</code></td>
+<td><code>60</code></td>
+<td></td>
+<td><code>UTCTimestamp</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss</td>
+</tr>
+<tr>
+<td><code>Capacity</code></td>
+<td><code>47</code></td>
+<td><code>A</code> <code>M</code> <code>P</code> <code>R</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>A-Agency</code> <code>M-Mixed</code> <code>P-Principal</code> <code>R-Riskless Principal</code></td>
+</tr>
+<tr>
+<td><code>ContraSideQualifier</code></td>
+<td><code>9004</code></td>
+<td><code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td><code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>Commission</code></td>
+<td><code>12</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Commission charged or paid</td>
+</tr>
+<tr>
+<td><code>TargetAccountID</code></td>
+<td><code>79</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Clear Street provided account ID</td>
+</tr>
+<tr>
+<td><code>OmitSECFee</code></td>
+<td><code>9005</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if SEC fees should not be applied</td>
+</tr>
+<tr>
+<td><code>OmitTAFFee</code></td>
+<td><code>9006</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if TAF fees should not be applied</td>
+</tr>
+<tr>
+<td><code>OrderID</code></td>
+<td><code>37</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Order ID to link all the executions in the average price account</td>
 </tr>
 </tbody></table>
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="n">kittens</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<h2 id='away-trade'>Away Trade</h2><div class="highlight"><pre class="highlight plaintext"><code>8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914552=20201021-21:42:34
+20=09001=W1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=W
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlmenetDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=M
+ContraClearingNum 440=0295
+ContraMPID375=ABCD
+ExecutingMPID 76=WXYZ
+Checksum10=180
 </code></pre></div>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p>This endpoint retrieves a specific kitten.</p>
+<p>This trade type represents a customer executing away from Clear Street LLC. For example, direct customer of CLST routes
+order for execution to Goldman.</p>
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-<h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
 <tr>
-<th>Parameter</th>
+<th>Name</th>
+<th>FIX Tag</th>
+<th>Allowable Values</th>
+<th>Type</th>
+<th>Length</th>
+<th>Required?</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td><code>ExecutionTransactionType</code></td>
+<td><code>20</code></td>
+<td><code>0</code> <code>1</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-New</code> <code>1-Cancel</code></td>
+</tr>
+<tr>
+<td><code>TradeType</code></td>
+<td><code>9001</code></td>
+<td><code>W</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>W-Away</code></td>
+</tr>
+<tr>
+<td><code>AccountID</code></td>
+<td><code>1</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>R</code></td>
+<td>Clear Street provided account id</td>
+</tr>
+<tr>
+<td><code>BehalfOfAccountID</code></td>
+<td><code>109</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>O</code></td>
+<td>Clear Street provided account ID if this trade is on behalf of another account</td>
+</tr>
+<tr>
+<td><code>BranchOffice</code></td>
+<td><code>9003</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Branch office for this trade</td>
+</tr>
+<tr>
+<td><code>TradeID</code></td>
+<td><code>17</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Unique Trade ID for this trade. Must be unique across days</td>
+</tr>
+<tr>
+<td><code>CancelTradeID</code></td>
+<td><code>9009</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Original trade ID to cancel; Required for all Cancel trades</td>
+</tr>
+<tr>
+<td><code>TradeDate</code></td>
+<td><code>75</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>R</code></td>
+<td>Trade Date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifierType</code></td>
+<td><code>22</code></td>
+<td><code>1</code> <code>2</code> <code>4</code> <code>8</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-CUSIP 2-SEDOL 4-ISIN 8-TICKER</code></td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifier</code></td>
+<td><code>48</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Instrument Identifier based on tag 22</td>
+</tr>
+<tr>
+<td><code>InstrumentCountry</code></td>
+<td><code>421</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 3166 alpha-3 country code where the instrument trades</td>
+</tr>
+<tr>
+<td><code>InstrumentCurrency</code></td>
+<td><code>15</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>Price</code></td>
+<td><code>31</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The price of the trade</td>
+</tr>
+<tr>
+<td><code>Quantity</code></td>
+<td><code>32</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The quantity of the trade (supports fractional quantities)</td>
+</tr>
+<tr>
+<td><code>RegisteredRep</code></td>
+<td><code>9002</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Registered rep on this trade</td>
+</tr>
+<tr>
+<td><code>Side</code></td>
+<td><code>54</code></td>
+<td><code>1</code> <code>2</code> <code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-Buy</code> <code>2-Sell</code> <code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>PositionType</code></td>
+<td><code>77</code></td>
+<td><code>C</code> <code>O</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>C-Close</code> <code>O-Open</code></td>
+</tr>
+<tr>
+<td><code>SettlementCurrency</code></td>
+<td><code>120</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>O</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>SettlementDateType</code></td>
+<td><code>63</code></td>
+<td><code>0</code> <code>7</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-Regular</code> <code>7-When_Issued</code></td>
+</tr>
+<tr>
+<td><code>SettlementDate</code></td>
+<td><code>64</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>CR</code></td>
+<td>Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>Solicited</code></td>
+<td><code>325</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>F-Solicited</code> <code>T-Not Solicited</code></td>
+</tr>
+<tr>
+<td><code>TradeExecutionTime</code></td>
+<td><code>60</code></td>
+<td></td>
+<td><code>UTCTimestamp</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss</td>
+</tr>
+<tr>
+<td><code>Capacity</code></td>
+<td><code>47</code></td>
+<td><code>A</code> <code>M</code> <code>P</code> <code>R</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>A-Agency</code> <code>M-Mixed</code> <code>P-Principal</code> <code>R-Riskless Principal</code></td>
+</tr>
+<tr>
+<td><code>ContraClearingNumber</code></td>
+<td><code>440</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>4</code></td>
+<td><code>O</code></td>
+<td>Contra-party&#39;s clearing number, If not supplied the value will be derived from an internal MPID to clearing number mapping</td>
+</tr>
+<tr>
+<td><code>ContraMPID</code></td>
+<td><code>375</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>R</code></td>
+<td>Contra-party&#39;s MPID</td>
+</tr>
+<tr>
+<td><code>ExecutingMPID</code></td>
+<td><code>76</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>R</code></td>
+<td>Executing party&#39;s MPID</td>
+</tr>
+<tr>
+<td><code>ContraSideQualifier</code></td>
+<td><code>9004</code></td>
+<td><code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td><code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>MIC</code></td>
+<td><code>30</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>O</code></td>
+<td>ISO 10383 Market Identifer Code for the exchange</td>
+</tr>
+<tr>
+<td><code>Commission</code></td>
+<td><code>12</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Commission charged or paid</td>
+</tr>
+<tr>
+<td><code>OmitSECFee</code></td>
+<td><code>9005</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if SEC fees should not be applied</td>
+</tr>
+<tr>
+<td><code>OmitTAFFee</code></td>
+<td><code>9006</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if TAF fees should not be applied</td>
+</tr>
+<tr>
+<td><code>LocateID</code></td>
+<td><code>9007</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Locate ID obtained for a short sale; Required for Sell Short</td>
+</tr>
+<tr>
+<td><code>LocateSource</code></td>
+<td><code>9008</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Firm supplying the locate (usually MPID); Required for Sell Short</td>
+</tr>
+<tr>
+<td><code>OrderID</code></td>
+<td><code>37</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Order ID to link all the executions in the average price account</td>
+</tr>
+<tr>
+<td><code>NSCCClearing</code></td>
+<td><code>9010</code></td>
+<td><code>agu</code> <code>contra</code> <code>corr</code> <code>corr_fees</code> <code>qsr</code></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td><code>agu</code> <code>contra</code> <code>corr</code> <code>corr_fees</code> <code>qsr</code></td>
 </tr>
 </tbody></table>
-<h2 id='delete-a-specific-kitten'>Delete a Specific Kitten</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="n">kittens</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span> <span class="se">\</span>
-  <span class="nt">-X</span> DELETE <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<h2 id='bilateral-trade'>Bilateral Trade</h2><div class="highlight"><pre class="highlight plaintext"><code>8=FIX.4.29=26135=849=OMS_CLIENT56=0000913234=12914152=20201021-21:42:34
+20=09001=B1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=M440=0295375=ABCD76=WXYZ10=180
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=B
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlmenetDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=M
+ContraClearingNum 440=0295
+ContraMPID375=ABCD
+ExecutingMPID 76=WXYZ
+Checksum10=180
 </code></pre></div>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">":("</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p>This endpoint deletes a specific kitten.</p>
-<h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
+<p>This trade represents a trade between two trading entities. For example, trading firm XYZ buys 100 share of AAPL from
+trading firm ABC.</p>
+
 <table><thead>
 <tr>
-<th>Parameter</th>
+<th>Name</th>
+<th>FIX Tag</th>
+<th>Allowable Values</th>
+<th>Type</th>
+<th>Length</th>
+<th>Required?</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to delete</td>
+<td><code>ExecutionTransactionType</code></td>
+<td><code>20</code></td>
+<td><code>0</code> <code>1</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-New</code> <code>1-Cancel</code></td>
+</tr>
+<tr>
+<td><code>TradeType</code></td>
+<td><code>9001</code></td>
+<td><code>B</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>B-Bilateral</code></td>
+</tr>
+<tr>
+<td><code>AccountID</code></td>
+<td><code>1</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>R</code></td>
+<td>Clear Street provided account id</td>
+</tr>
+<tr>
+<td><code>BehalfOfAccountID</code></td>
+<td><code>109</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>O</code></td>
+<td>Clear Street provided account ID if this trade is on behalf of another account</td>
+</tr>
+<tr>
+<td><code>BranchOffice</code></td>
+<td><code>9003</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Branch office for this trade</td>
+</tr>
+<tr>
+<td><code>TradeID</code></td>
+<td><code>17</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Unique Trade ID for this trade. Must be unique across days</td>
+</tr>
+<tr>
+<td><code>CancelTradeID</code></td>
+<td><code>9009</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Original trade ID to cancel; Required for all Cancel trades</td>
+</tr>
+<tr>
+<td><code>Trade Date</code></td>
+<td><code>75</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>R</code></td>
+<td>Trade Date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifierType</code></td>
+<td><code>22</code></td>
+<td><code>1</code> <code>2</code> <code>4</code> <code>8</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-CUSIP 2-SEDOL 4-ISIN 8-TICKER</code></td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifier</code></td>
+<td><code>48</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Instrument Identifier based on tag 22</td>
+</tr>
+<tr>
+<td><code>InstrumentCountry</code></td>
+<td><code>421</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 3166 alpha-3 country code where the instrument trades</td>
+</tr>
+<tr>
+<td><code>InstrumentCurrency</code></td>
+<td><code>15</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>Price</code></td>
+<td><code>31</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The price of the trade</td>
+</tr>
+<tr>
+<td><code>Quantity</code></td>
+<td><code>32</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The quantity of the trade (supports fractional quantities)</td>
+</tr>
+<tr>
+<td><code>RegisteredRep</code></td>
+<td><code>9002</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Registered rep on this trade</td>
+</tr>
+<tr>
+<td><code>Side</code></td>
+<td><code>54</code></td>
+<td><code>1</code> <code>2</code> <code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-Buy</code> <code>2-Sell</code> <code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>PositionType</code></td>
+<td><code>77</code></td>
+<td><code>C</code> <code>O</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>C-Close</code> <code>O-Open</code></td>
+</tr>
+<tr>
+<td><code>SettlementCurrency</code></td>
+<td><code>120</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>O</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>SettlementDateType</code></td>
+<td><code>63</code></td>
+<td><code>0</code> <code>7</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-Regular</code> <code>7-When_Issued</code></td>
+</tr>
+<tr>
+<td><code>SettlementDate</code></td>
+<td><code>64</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>CR</code></td>
+<td>Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>Solicited</code></td>
+<td><code>325</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>F-Solicited</code> <code>T-Not Solicited</code></td>
+</tr>
+<tr>
+<td><code>TradeExecutionTime</code></td>
+<td><code>60</code></td>
+<td></td>
+<td><code>UTCTimestamp</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss</td>
+</tr>
+<tr>
+<td><code>Capacity</code></td>
+<td><code>47</code></td>
+<td><code>A</code> <code>M</code> <code>P</code> <code>R</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>A-Agency</code> <code>M-Mixed</code> <code>P-Principal</code> <code>R-Riskless Principal</code></td>
+</tr>
+<tr>
+<td><code>ContraClearing Number</code></td>
+<td><code>440</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>4</code></td>
+<td><code>O</code></td>
+<td>Contra-party&#39;s clearing number, If not supplied the value will be derived from an internal MPID to clearing number mapping</td>
+</tr>
+<tr>
+<td><code>ContraMPID</code></td>
+<td><code>375</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>R</code></td>
+<td>Contra-party&#39;s MPID</td>
+</tr>
+<tr>
+<td><code>ExecutingMPID</code></td>
+<td><code>76</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>R</code></td>
+<td>Executing party&#39;s MPID</td>
+</tr>
+<tr>
+<td><code>ContraSideQualifier</code></td>
+<td><code>9004</code></td>
+<td><code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td><code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>MIC</code></td>
+<td><code>30</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>O</code></td>
+<td>ISO 10383 Market Identifer Code for the exchange</td>
+</tr>
+<tr>
+<td><code>Commission</code></td>
+<td><code>12</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Commission charged or paid</td>
+</tr>
+<tr>
+<td><code>OmitSECFee</code></td>
+<td><code>9005</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if SEC fees should not be applied</td>
+</tr>
+<tr>
+<td><code>OmitTAFFee</code></td>
+<td><code>9006</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if TAF fees should not be applied</td>
+</tr>
+<tr>
+<td><code>LocateID</code></td>
+<td><code>9007</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Locate ID obtained for a short sale; Required for Sell Short</td>
+</tr>
+<tr>
+<td><code>LocateSource</code></td>
+<td><code>9008</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Firm supplying the locate (usually MPID); Required for Sell Short</td>
+</tr>
+<tr>
+<td><code>OrderID</code></td>
+<td><code>37</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Order ID to link all the executions in the average price account</td>
+</tr>
+<tr>
+<td><code>NSCC Clearing</code></td>
+<td><code>9010</code></td>
+<td><code>agu</code> <code>contra</code> <code>corr</code> <code>corr_fees</code> <code>qsr</code></td>
+<td><code>String</code></td>
+<td><code>O</code></td>
+<td><code>agu</code> <code>contra</code> <code>corr</code> <code>corr_fees</code> <code>qsr</code></td>
+<td></td>
 </tr>
 </tbody></table>
-<h1 id='errors'>Errors</h1>
-<aside class="notice">
-This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
-</aside>
-
-<p>The Kittn API uses the following error codes:</p>
+<h2 id='exchange-trade'>Exchange Trade</h2><div class="highlight"><pre class="highlight plaintext"><code>8=FIX.4.29=25135=849=OMS_CLIENT56=0000913234=12914452=20201021-21:42:34
+20=09001=E1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=R76=ABCD30=NYSE10=180
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=E
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlementDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=R
+ExecutingMPID 76=WXYZ
+MIC 30=NYSE
+Checksum10=180
+</code></pre></div>
+<p>This trade represents a trade between a trading entity and an exchange. For example, trading firm XYX buys 100 shares of
+AAPL directly on Nasdaq</p>
 
 <table><thead>
 <tr>
-<th>Error Code</th>
-<th>Meaning</th>
+<th>Name</th>
+<th>FIX Tag</th>
+<th>Allowable Values</th>
+<th>Type</th>
+<th>Length</th>
+<th>Required?</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request -- Your request is invalid.</td>
+<td><code>ExecutionTransactionType</code></td>
+<td><code>20</code></td>
+<td><code>0</code> <code>1</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-New</code> <code>1-Cancel</code></td>
 </tr>
 <tr>
-<td>401</td>
-<td>Unauthorized -- Your API key is wrong.</td>
+<td><code>TradeType</code></td>
+<td><code>9001</code></td>
+<td><code>E</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>E-Exchange</code></td>
 </tr>
 <tr>
-<td>403</td>
-<td>Forbidden -- The kitten requested is hidden for administrators only.</td>
+<td><code>AccountID</code></td>
+<td><code>1</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>R</code></td>
+<td>Clear Street provided account id</td>
 </tr>
 <tr>
-<td>404</td>
-<td>Not Found -- The specified kitten could not be found.</td>
+<td><code>BehalfOfAccountID</code></td>
+<td><code>109</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>O</code></td>
+<td>Clear Street provided account ID if this trade is on behalf of another account</td>
 </tr>
 <tr>
-<td>405</td>
-<td>Method Not Allowed -- You tried to access a kitten with an invalid method.</td>
+<td><code>BranchOffice</code></td>
+<td><code>9003</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Branch office for this trade</td>
 </tr>
 <tr>
-<td>406</td>
-<td>Not Acceptable -- You requested a format that isn&#39;t json.</td>
+<td><code>TradeID</code></td>
+<td><code>17</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Unique Trade ID for this trade. Must be unique across days</td>
 </tr>
 <tr>
-<td>410</td>
-<td>Gone -- The kitten requested has been removed from our servers.</td>
+<td><code>CancelTradeID</code></td>
+<td><code>9009</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Original trade ID to cancel; Required for all Cancel trades</td>
 </tr>
 <tr>
-<td>418</td>
-<td>I&#39;m a teapot.</td>
+<td><code>TradeDate</code></td>
+<td><code>75</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>R</code></td>
+<td>Trade Date in <code>YYYYMMDD</code> format</td>
 </tr>
 <tr>
-<td>429</td>
-<td>Too Many Requests -- You&#39;re requesting too many kittens! Slow down!</td>
+<td><code>InstrumentIdentifierType</code></td>
+<td><code>22</code></td>
+<td><code>1</code> <code>2</code> <code>4</code> <code>8</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-CUSIP 2-SEDOL 4-ISIN 8-TICKER</code></td>
 </tr>
 <tr>
-<td>500</td>
-<td>Internal Server Error -- We had a problem with our server. Try again later.</td>
+<td><code>InstrumentIdentifier</code></td>
+<td><code>48</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Instrument Identifier based on tag 22</td>
 </tr>
 <tr>
-<td>503</td>
-<td>Service Unavailable -- We&#39;re temporarily offline for maintenance. Please try again later.</td>
+<td><code>InstrumentCountry</code></td>
+<td><code>421</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 3166 alpha-3 country code where the instrument trades</td>
+</tr>
+<tr>
+<td><code>InstrumentCurrency</code></td>
+<td><code>15</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>Price</code></td>
+<td><code>31</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The price of the trade</td>
+</tr>
+<tr>
+<td><code>Quantity</code></td>
+<td><code>32</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The quantity of the trade (supports fractional quantities)</td>
+</tr>
+<tr>
+<td><code>RegisteredRep</code></td>
+<td><code>9002</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Registered rep on this trade</td>
+</tr>
+<tr>
+<td><code>Side</code></td>
+<td><code>54</code></td>
+<td><code>1</code> <code>2</code> <code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-Buy</code> <code>2-Sell</code> <code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>PositionType</code></td>
+<td><code>77</code></td>
+<td><code>C</code> <code>O</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>C-Close</code> <code>O-Open</code></td>
+</tr>
+<tr>
+<td><code>SettlementCurrency</code></td>
+<td><code>120</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>O</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>SettlementDateType</code></td>
+<td><code>63</code></td>
+<td><code>0</code> <code>7</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-Regular</code> <code>7-When_Issued</code></td>
+</tr>
+<tr>
+<td><code>SettlementDate</code></td>
+<td><code>64</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>CR</code></td>
+<td>Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>Solicited</code></td>
+<td><code>325</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>F-Solicited</code> <code>T-Not Solicited</code></td>
+</tr>
+<tr>
+<td><code>TradeExecutionTime</code></td>
+<td><code>60</code></td>
+<td></td>
+<td><code>UTCTimestamp</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss</td>
+</tr>
+<tr>
+<td><code>Capacity</code></td>
+<td><code>47</code></td>
+<td><code>A</code> <code>M</code> <code>P</code> <code>R</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>A-Agency</code> <code>M-Mixed</code> <code>P-Principal</code> <code>R-Riskless Principal</code></td>
+</tr>
+<tr>
+<td><code>ExecutingMPID</code></td>
+<td><code>76</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>R</code></td>
+<td>Executing party&#39;s MPID</td>
+</tr>
+<tr>
+<td><code>ContraSideQualifier</code></td>
+<td><code>9004</code></td>
+<td><code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td><code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>MIC</code></td>
+<td><code>30</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>4</code></td>
+<td><code>R</code></td>
+<td>ISO 10383 Market Identifer Code for the exchange</td>
+</tr>
+<tr>
+<td><code>Commission</code></td>
+<td><code>12</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Commission charged or paid</td>
+</tr>
+<tr>
+<td><code>OmitSECFee</code></td>
+<td><code>9005</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if SEC fees should not be applied</td>
+</tr>
+<tr>
+<td><code>OmitTAFFee</code></td>
+<td><code>9006</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if TAF fees should not be applied</td>
+</tr>
+<tr>
+<td><code>LocateID</code></td>
+<td><code>9007</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Locate ID obtained for a short sale; Required for Sell Short</td>
+</tr>
+<tr>
+<td><code>LocateSource</code></td>
+<td><code>9008</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Firm supplying the locate (usually MPID); Required for Sell Short</td>
+</tr>
+<tr>
+<td><code>OrderID</code></td>
+<td><code>37</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Order ID to link all the executions in the average price account</td>
+</tr>
+</tbody></table>
+<h2 id='transfer-trade'>Transfer Trade</h2><div class="highlight"><pre class="highlight plaintext"><code>8=FIX.4.29=25335=849=OMS_CLIENT56=0000913234=12914252=20201021-21:42:34
+20=09001=T1=10007817=CLIENT_TRADE_ID75=2020102122=448=US70450Y1038
+421=USA15=USD31=000213.48000032=0000000298754=263=064=20201023
+60=20201021-13:42:34.12347=P76=ABCD79=10001710=180
+</code></pre></div><div class="highlight"><pre class="highlight plaintext"><code>BeginString 8=FIX.4.2
+BodyLength9=261
+MsgType35=8
+SenderCompID49=OMS_CLIENT
+TargetCompID56=CLST
+MsgSeqNum34=129145
+SendingTime52=20201021-21:42:34
+ExecutionTransactionType20=0
+TradeType9001=T
+AccountID1=100078
+ClientTradeID17=CLIENT_TRADE_ID
+TradeDate75=20201021
+InstrumentIdentifierType22=4
+InstrumentIdentifier 48=US70450Y1038
+InstrumentCountry421=USA
+InstrumentCurrency15=USD
+Price31=000213.480000
+Quantity32=00000002987
+Side54=2
+SettlementDateType63=0
+SettlmenetDate64=20201023
+TradeExecutionTime60=20201021-13:42:34.123
+Capacity47=P
+ExecutingMPID 76=WXYZ
+TargetAccountID 79=100017
+Checksum10=180
+</code></pre></div>
+<p>This trade type is to facilitate trade movement between Clear Street internal accounts. For example, trade movement from a proprietary account to an average price account.</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>FIX Tag</th>
+<th>Allowable Values</th>
+<th>Type</th>
+<th>Length</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>ExecutionTransactionType</code></td>
+<td><code>20</code></td>
+<td><code>0</code> <code>1</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-New</code> <code>1-Cancel</code></td>
+</tr>
+<tr>
+<td><code>TradeType</code></td>
+<td><code>9001</code></td>
+<td><code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>T-Transfer</code></td>
+</tr>
+<tr>
+<td><code>AccountID</code></td>
+<td><code>1</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>R</code></td>
+<td>Clear Street provided account id</td>
+</tr>
+<tr>
+<td><code>BehalfOfAccountID</code></td>
+<td><code>109</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>6</code></td>
+<td><code>O</code></td>
+<td>Clear Street provided account ID if this trade is on behalf of another account</td>
+</tr>
+<tr>
+<td><code>BranchOffice</code></td>
+<td><code>9003</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Branch office for this trade</td>
+</tr>
+<tr>
+<td><code>TradeID</code></td>
+<td><code>17</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Unique Trade ID for this trade. Must be unique across days</td>
+</tr>
+<tr>
+<td><code>CancelTradeID</code></td>
+<td><code>9009</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Original trade ID to cancel; Required for all Cancel trades</td>
+</tr>
+<tr>
+<td><code>TradeDate</code></td>
+<td><code>75</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>R</code></td>
+<td>Trade Date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifierType</code></td>
+<td><code>22</code></td>
+<td><code>1</code> <code>2</code> <code>4</code> <code>8</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-CUSIP 2-SEDOL 4-ISIN 8-TICKER</code></td>
+</tr>
+<tr>
+<td><code>InstrumentIdentifier</code></td>
+<td><code>48</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Instrument Identifier based on tag 22</td>
+</tr>
+<tr>
+<td><code>InstrumentCountry</code></td>
+<td><code>421</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 3166 alpha-3 country code where the instrument trades</td>
+</tr>
+<tr>
+<td><code>InstrumentCurrency</code></td>
+<td><code>15</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>R</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>Price</code></td>
+<td><code>31</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The price of the trade</td>
+</tr>
+<tr>
+<td><code>Quantity</code></td>
+<td><code>32</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>The quantity of the trade (supports fractional quantities)</td>
+</tr>
+<tr>
+<td><code>RegisteredRep</code></td>
+<td><code>9002</code></td>
+<td></td>
+<td><code>String</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Registered rep on this trade</td>
+</tr>
+<tr>
+<td><code>Side</code></td>
+<td><code>54</code></td>
+<td><code>1</code> <code>2</code> <code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>1-Buy</code> <code>2-Sell</code> <code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>PositionType</code></td>
+<td><code>77</code></td>
+<td><code>C</code> <code>O</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>C-Close</code> <code>O-Open</code></td>
+</tr>
+<tr>
+<td><code>SettlementCurrency</code></td>
+<td><code>120</code></td>
+<td></td>
+<td><code>String</code></td>
+<td><code>3</code></td>
+<td><code>O</code></td>
+<td>ISO 4217 alpha-3 currency code in which the instrument trades</td>
+</tr>
+<tr>
+<td><code>SettlementDateType</code></td>
+<td><code>63</code></td>
+<td><code>0</code> <code>7</code></td>
+<td><code>Integer</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>0-Regular</code> <code>7-When_Issued</code></td>
+</tr>
+<tr>
+<td><code>SettlementDate</code></td>
+<td><code>64</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td><code>8</code></td>
+<td><code>CR</code></td>
+<td>Defaults to 99991231 for when issued trades and not required for when issued trades. Settlement date in <code>YYYYMMDD</code> format</td>
+</tr>
+<tr>
+<td><code>Solicited</code></td>
+<td><code>325</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td><code>F-Solicited</code> <code>T-Not Solicited</code></td>
+</tr>
+<tr>
+<td><code>TradeExecutionTime</code></td>
+<td><code>60</code></td>
+<td></td>
+<td><code>UTCTimestamp</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Timestamp of when the trade occurred in YYYYMMDD-HH:MM:SS.sss</td>
+</tr>
+<tr>
+<td><code>Capacity</code></td>
+<td><code>47</code></td>
+<td><code>A</code> <code>M</code> <code>P</code> <code>R</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>R</code></td>
+<td><code>A-Agency</code> <code>M-Mixed</code> <code>P-Principal</code> <code>R-Riskless Principal</code></td>
+</tr>
+<tr>
+<td><code>ContraSideQualifier</code></td>
+<td><code>9004</code></td>
+<td><code>5</code> <code>6</code></td>
+<td><code>Integer</code></td>
+<td></td>
+<td><code>CR</code></td>
+<td><code>5-Sell Short</code> <code>6-Sell Exempt</code></td>
+</tr>
+<tr>
+<td><code>Commission</code></td>
+<td><code>12</code></td>
+<td></td>
+<td><code>Decimal</code></td>
+<td></td>
+<td><code>O</code></td>
+<td>Commission charged or paid</td>
+</tr>
+<tr>
+<td><code>TargetAccountID</code></td>
+<td><code>79</code></td>
+<td></td>
+<td><code>Integer</code></td>
+<td></td>
+<td><code>R</code></td>
+<td>Clear Street provided account ID</td>
+</tr>
+<tr>
+<td><code>OmitSECFee</code></td>
+<td><code>9005</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if SEC fees should not be applied</td>
+</tr>
+<tr>
+<td><code>OmitTAFFee</code></td>
+<td><code>9006</code></td>
+<td><code>F</code> <code>T</code></td>
+<td><code>String</code></td>
+<td><code>1</code></td>
+<td><code>O</code></td>
+<td>True if TAF fees should not be applied</td>
+</tr>
+</tbody></table>
+<h1 id='fix-outbound-response-specification'>FIX Outbound (Response) Specification</h1>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>FIX Tag</th>
+<th>Allowable Values</th>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>Trade Details</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td>FIX message received from OMS</td>
+<td></td>
+</tr>
+<tr>
+<td><code>Response</code></td>
+<td><code>9011</code></td>
+<td></td>
+<td><code>String</code></td>
+<td>ACK or NACK with reason</td>
+<td><code>accepted</code></td>
 </tr>
 </tbody></table>
 
       </div>
       <div class="dark-box">
-          <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
-          </div>
       </div>
     </div>
   </body>
