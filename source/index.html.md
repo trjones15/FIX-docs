@@ -284,6 +284,7 @@ trading firm ABC.
 | `LocateSource` | `9008` |  | `String` |  | `CR` | Firm supplying the locate (usually MPID); Required for Sell Short |
 | `OrderID` | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
 | `NSCC Clearing` | `9010` | `agu` `contra` `corr` `corr_fees` `qsr` | `String` | `O` | `agu` `contra` `corr` `corr_fees` `qsr` |
+| `LastLiquidityInd` | `851` | `1` `2` `3` `4` | `Integer` |  | `O` | `1 - Added Liquidity` `2 - Removed Liquidity` `3 - Liquidity Routed Out` `4 - Netted Liquidity` | `1` |
 
 
 ## Exchange Trade
@@ -361,6 +362,7 @@ AAPL directly on Nasdaq
 | `LocateID` | `9007` |  | `String` |  | `CR` | Locate ID obtained for a short sale; Required for Sell Short |
 | `LocateSource` | `9008` |  | `String` |  | `CR` | Firm supplying the locate (usually MPID); Required for Sell Short |
 | `OrderID` | `37` |  | `String` |  | `O` | Order ID to link all the executions in the average price account |
+| `LastLiquidityInd` | `851` | `1` `2` `3` `4` | `Integer` |  | `O` | `1 - Added Liquidity` `2 - Removed Liquidity` `3 - Liquidity Routed Out` `4 - Netted Liquidity` | `1` |
 
 ## Transfer Trade
 
