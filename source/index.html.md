@@ -101,8 +101,14 @@ trades for a customer and allocating it to them as a single trade.
 | `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
 | `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
 | `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
-| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
-| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `Instrument Identifier Type` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `CR` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `8` |
+| `Instrument Identifier` | `48` |  | `String` |  | `CR` | Instrument Identifier based on tag 22 Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `AAPL` |
+| `Security Type` | `167` | | `String` | | `CR` | Indicates type of security. Required for Options where tags 22 or 48 are not provided. | `OPT` |
+| `Symbol` | `55` | | `String` | `6` | `CR` | Ticker symbol. Required for Options where tags 22 or 48 are not provided. | `SPY` |
+| `Maturity Month Year` | `200` | | `Integer` | `6` | `CR` | Month and year of the maturity for an Option. Maturity Month Year in format `YYYYMM`. Required for Options where tags 22 or 48 are not provided. | `202107` |
+| `Put Or Call` | `201` | `0` `1` | `Integer` | `1` | `CR` | Indicates whether an Option is for a put or a call `0 = Put` `1 = Call` Required for Options where tags 22 or 48 are not provided. | `1` |
+| `Strike Price` | `202` | | `Decimal` | `8` | `CR` | Strike Price for an Option. Required for Options where tags 22 or 48 are not provided. | `100.50` |
+| `Maturity Day` | `205` | | `Integer` | `2` | `CR` | To be used in conjunction with Maturity Month Year `200` to sepcify a particular maturity date for an Option. Required for Options where tags 22 or 48 are not provided. | `30` | 
 | `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
 | `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
 | `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
@@ -175,8 +181,14 @@ order for execution to Goldman.
 | `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
 | `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
 | `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
-| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
-| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `Instrument Identifier Type` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `CR` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `8` |
+| `Instrument Identifier` | `48` |  | `String` |  | `CR` | Instrument Identifier based on tag 22 Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `AAPL` |
+| `Security Type` | `167` | | `String` | | `CR` | Indicates type of security. Required for Options where tags 22 or 48 are not provided. | `OPT` |
+| `Symbol` | `55` | | `String` | `6` | `CR` | Ticker symbol. Required for Options where tags 22 or 48 are not provided. | `SPY` |
+| `Maturity Month Year` | `200` | | `Integer` | `6` | `CR` | Month and year of the maturity for an Option. Maturity Month Year in format `YYYYMM`. Required for Options where tags 22 or 48 are not provided. | `202107` |
+| `Put Or Call` | `201` | `0` `1` | `Integer` | `1` | `CR` | Indicates whether an Option is for a put or a call `0 = Put` `1 = Call` Required for Options where tags 22 or 48 are not provided. | `1` |
+| `Strike Price` | `202` | | `Decimal` | `8` | `CR` | Strike Price for an Option. Required for Options where tags 22 or 48 are not provided. | `100.50` |
+| `Maturity Day` | `205` | | `Integer` | `2` | `CR` | To be used in conjunction with Maturity Month Year `200` to sepcify a particular maturity date for an Option. Required for Options where tags 22 or 48 are not provided. | `30` | 
 | `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
 | `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
 | `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
@@ -257,8 +269,14 @@ trading firm ABC.
 | `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
 | `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
 | `Trade Date` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
-| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
-| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `Instrument Identifier Type` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `CR` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `8` |
+| `Instrument Identifier` | `48` |  | `String` |  | `CR` | Instrument Identifier based on tag 22 Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `AAPL` |
+| `Security Type` | `167` | | `String` | | `CR` | Indicates type of security. Required for Options where tags 22 or 48 are not provided. | `OPT` |
+| `Symbol` | `55` | | `String` | `6` | `CR` | Ticker symbol. Required for Options where tags 22 or 48 are not provided. | `SPY` |
+| `Maturity Month Year` | `200` | | `Integer` | `6` | `CR` | Month and year of the maturity for an Option. Maturity Month Year in format `YYYYMM`. Required for Options where tags 22 or 48 are not provided. | `202107` |
+| `Put Or Call` | `201` | `0` `1` | `Integer` | `1` | `CR` | Indicates whether an Option is for a put or a call `0 = Put` `1 = Call` Required for Options where tags 22 or 48 are not provided. | `1` |
+| `Strike Price` | `202` | | `Decimal` | `8` | `CR` | Strike Price for an Option. Required for Options where tags 22 or 48 are not provided. | `100.50` |
+| `Maturity Day` | `205` | | `Integer` | `2` | `CR` | To be used in conjunction with Maturity Month Year `200` to sepcify a particular maturity date for an Option. Required for Options where tags 22 or 48 are not provided. | `30` | 
 | `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
 | `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
 | `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
@@ -338,8 +356,14 @@ AAPL directly on Nasdaq
 | `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
 | `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
 | `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
-| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
-| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `Instrument Identifier Type` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `CR` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `8` |
+| `Instrument Identifier` | `48` |  | `String` |  | `CR` | Instrument Identifier based on tag 22 Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `AAPL` |
+| `Security Type` | `167` | | `String` | | `CR` | Indicates type of security. Required for Options where tags 22 or 48 are not provided. | `OPT` |
+| `Symbol` | `55` | | `String` | `6` | `CR` | Ticker symbol. Required for Options where tags 22 or 48 are not provided. | `SPY` |
+| `Maturity Month Year` | `200` | | `Integer` | `6` | `CR` | Month and year of the maturity for an Option. Maturity Month Year in format `YYYYMM`. Required for Options where tags 22 or 48 are not provided. | `202107` |
+| `Put Or Call` | `201` | `0` `1` | `Integer` | `1` | `CR` | Indicates whether an Option is for a put or a call `0 = Put` `1 = Call` Required for Options where tags 22 or 48 are not provided. | `1` |
+| `Strike Price` | `202` | | `Decimal` | `8` | `CR` | Strike Price for an Option. Required for Options where tags 22 or 48 are not provided. | `100.50` |
+| `Maturity Day` | `205` | | `Integer` | `2` | `CR` | To be used in conjunction with Maturity Month Year `200` to sepcify a particular maturity date for an Option. Required for Options where tags 22 or 48 are not provided. | `30` | 
 | `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
 | `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
 | `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
@@ -414,8 +438,14 @@ This trade type is to facilitate trade movement between Clear Street internal ac
 | `TradeID` | `17` |  | `String` |  | `R` | Unique Trade ID for this trade. Must be unique across days |
 | `CancelTradeID` | `9009` |  | `String` |  | `CR` | Original trade ID to cancel; Required for all Cancel trades |
 | `TradeDate` | `75` |  | `Integer` | `8` | `R` | Trade Date in `YYYYMMDD` format |
-| `InstrumentIdentifierType` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `R` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` |
-| `InstrumentIdentifier` | `48` |  | `String` |  | `R` | Instrument Identifier based on tag 22 |
+| `Instrument Identifier Type` | `22` | `1` `2` `4` `8` | `Integer` | `1` | `CR` | `1-CUSIP 2-SEDOL 4-ISIN 8-TICKER` Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `8` |
+| `Instrument Identifier` | `48` |  | `String` |  | `CR` | Instrument Identifier based on tag 22 Required unless the instrument is an Option and tags 167, 55, 200, 201, 202, and 205 are provided. | `AAPL` |
+| `Security Type` | `167` | | `String` | | `CR` | Indicates type of security. Required for Options where tags 22 or 48 are not provided. | `OPT` |
+| `Symbol` | `55` | | `String` | `6` | `CR` | Ticker symbol. Required for Options where tags 22 or 48 are not provided. | `SPY` |
+| `Maturity Month Year` | `200` | | `Integer` | `6` | `CR` | Month and year of the maturity for an Option. Maturity Month Year in format `YYYYMM`. Required for Options where tags 22 or 48 are not provided. | `202107` |
+| `Put Or Call` | `201` | `0` `1` | `Integer` | `1` | `CR` | Indicates whether an Option is for a put or a call `0 = Put` `1 = Call` Required for Options where tags 22 or 48 are not provided. | `1` |
+| `Strike Price` | `202` | | `Decimal` | `8` | `CR` | Strike Price for an Option. Required for Options where tags 22 or 48 are not provided. | `100.50` |
+| `Maturity Day` | `205` | | `Integer` | `2` | `CR` | To be used in conjunction with Maturity Month Year `200` to sepcify a particular maturity date for an Option. Required for Options where tags 22 or 48 are not provided. | `30` | 
 | `InstrumentCountry` | `421` |  | `String` | `3` | `R` | ISO 3166 alpha-3 country code where the instrument trades |
 | `InstrumentCurrency` | `15` |  | `String` | `3` | `R` | ISO 4217 alpha-3 currency code in which the instrument trades |
 | `Price` | `31` |  | `Decimal` |  | `R` | The price of the trade |
